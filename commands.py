@@ -348,7 +348,10 @@ class Commands(commands.Cog):
         ms = round(delta * 1000 % 1000)
         await temp.delete()
         await ctx.send(f"Finished updating database ({mi}m {sec}s {ms}ms)")
-
+        
+    @commands.command(aliases=["meid", "safescore"])
+    async def connect(self, ctx):
+        await ctx.send(f"Please connect with MeID: https://www.iloot.it/me-id/ (temp link, not finished)")
 
 def setup(bot):
     bot.add_cog(Commands(bot))
