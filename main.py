@@ -88,8 +88,8 @@ async def on_ready():
     bot.app_info = await bot.application_info()
 
     await bot.change_presence(status=discord.Status.dnd, activity=discord.Activity(
-        name=f"for N-Words on {len(bot.guilds)} servers", type=discord.ActivityType.watching))
-
+        #name=f"for N-Words on {len(bot.guilds)} servers", type=discord.ActivityType.watching))
+        name=f"for N-Words. Beta Sync with MeID.", type=discord.ActivityType.watching))
 
 @bot.event
 async def on_message(message):

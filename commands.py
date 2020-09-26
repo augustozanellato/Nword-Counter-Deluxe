@@ -351,6 +351,7 @@ class Commands(commands.Cog):
         
     @commands.command(aliases=["meid", "safescore"])
     async def connect(self, ctx):
+        """Connect using MeID and safe your progress"""
         await ctx.send(f"Please connect with MeID: https://www.iloot.it/me-id/ (temp link, not finished)")
 
 def setup(bot):
