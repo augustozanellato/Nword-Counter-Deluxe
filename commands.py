@@ -350,9 +350,16 @@ class Commands(commands.Cog):
         await ctx.send(f"Finished updating database ({mi}m {sec}s {ms}ms)")
         
     @commands.command(aliases=["meid", "safescore"])
+    @commands.is_owner()
     async def connect(self, ctx):
         """Connect using MeID and safe your progress"""
-        await ctx.send(f"Please connect with MeID: https://www.iloot.it/me-id/ (temp link, not finished)")
+        await ctx.send(f"Please connect with MeID: https://www.iloot.it/me-id/ (temp link, not finished)") #Connecting with MeID does not work yet.
+        
+   @commands.command(aliases=["git", "source"])
+    async def github(self, ctx):
+        """Link to my Github page"""
+        await ctx.send(f"Here's my link to the Github page: \n"
+                       f"https://github.com/MVDW-Java/Nword-Counter-Deluxe")
 
 def setup(bot):
     bot.add_cog(Commands(bot))
