@@ -76,7 +76,7 @@ class Commands(commands.Cog):
             name="License",
             value="[CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/)")
         embed.add_field(
-            name="Source Code", value="https://github.com/NWordCounter/bot", inline=False)
+            name="Source Code", value="https://github.com/MVDW-Java/Nword-Counter-Deluxe", inline=False)
 
         await ctx.send(embed=embed)
 
@@ -352,7 +352,7 @@ class Commands(commands.Cog):
     @commands.command(aliases=["meid", "safescore"])
     @commands.is_owner()
     async def connect(self, ctx):
-        """Connect using MeID and safe your progress"""
+        """Connect using MeID and safe your progress (WIP)"""
         await ctx.send(f"Please connect with MeID: https://www.iloot.it/me-id/ (temp link, not finished)") #Connecting with MeID does not work yet.
         
     @commands.command(aliases=["git", "source"])
