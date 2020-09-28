@@ -17,7 +17,7 @@ import sys
 
 
 def find_color(ctx):
-    """Find the bot's rendered color. If it's the default color or we're in a DM, return Discord's "greyple" color"""
+    #Find the bot's rendered color. If it's the default color or we're in a DM, return Discord's "greyple" color
 
     try:
         if ctx.guild.me.color == discord.Color.default():
@@ -30,14 +30,14 @@ def find_color(ctx):
 
 
 class Commands(commands.Cog):
-    """Commands for the N-Word Counter"""
+    #Commands for the N-Word Counter
 
     def __init__(self, bot):
         self.bot = bot
 
     @commands.command()
     async def help(self, ctx):
-        """This help command!"""
+        """This help command!""" #Description
 
         cmds = sorted([c for c in self.bot.commands if not c.hidden], key=lambda c: c.name)
 
@@ -57,7 +57,7 @@ class Commands(commands.Cog):
 
     @commands.command(aliases=["info"])
     async def about(self, ctx):
-        """Some basic info about me"""
+        """Some basic info about me""" #Description
 
         embed = discord.Embed(
             title=str(self.bot.user), description=self.bot.app_info.description +
@@ -85,7 +85,9 @@ class Commands(commands.Cog):
         """Get the number of times a user has said the N-Word
         Format like this: `count <@mention user>`
         If you don't mention a user, I'll get **your** N-word count
-        """
+        """ #Description
+        
+        
         if user is None:
             user = ctx.author
         if user == self.bot.user:
@@ -122,7 +124,7 @@ class Commands(commands.Cog):
 
     @commands.command()
     async def invite(self, ctx):
-        """Sends an invite link so you can invite me to your own server"""
+        """Sends an invite link so you can invite me to your own server""" #Description
 
         await ctx.send("Here's my invite link so I can count N-words on your server too:\n"
                        f"https://discordapp.com/oauth2/authorize?client_id={self.bot.app_info.id}"
@@ -130,7 +132,7 @@ class Commands(commands.Cog):
 
     @commands.command()
     async def stats(self, ctx):
-        """View my statistics"""
+        """View my statistics""" #Description
 
         await ctx.channel.trigger_typing()
 
@@ -192,7 +194,9 @@ class Commands(commands.Cog):
     async def top(self, ctx, param: str=None):
         """See the leaderboard of the top N-word users of this server. Do `top global` to see the top users across all servers
         Note: If a user said N-words on another server that I'm also on, those will be taken into account
-        """
+        """ #Description
+        
+        
         await ctx.channel.trigger_typing()
         def create_leaderboard():
             leaderboard = {}
@@ -245,7 +249,7 @@ class Commands(commands.Cog):
     @commands.command(hidden=True)
     @commands.is_owner()
     async def edit(self, ctx, user_id: int, total: int, hard_r: int, last_time: int=None):
-        """Edit a user's entry in the dict or add a new one"""
+        """Edit a user's entry in the dict or add a new one""" #Description
 
         if last_time:
             self.bot.nwords[user_id] = {"id": user_id, "total": total, "hard_r": hard_r, "last_time": last_time}
@@ -256,7 +260,7 @@ class Commands(commands.Cog):
     @commands.command(hidden=True)
     @commands.is_owner()
     async def pop(self, ctx, user_id: int):
-        """Delete a user's entry from the dict"""
+        """Delete a user's entry from the dict""" #Description
 
         try:
             self.bot.nwords.pop(user_id)
@@ -267,7 +271,7 @@ class Commands(commands.Cog):
     @commands.command(hidden=True)
     @commands.is_owner()
     async def execute(self, ctx, *, query):
-        """Execute a query in the database"""
+        """Execute a query in the database""" #Description
 
         try:
             with ctx.channel.typing():
@@ -280,7 +284,7 @@ class Commands(commands.Cog):
     @commands.command(hidden=True)
     @commands.is_owner()
     async def fetch(self, ctx, *, query):
-        """Run a query in the database and fetch the result"""
+        """Run a query in the database and fetch the result""" #Description
 
         try:
             with ctx.channel.typing():
@@ -304,7 +308,7 @@ class Commands(commands.Cog):
     @commands.command(hidden=True)
     @commands.is_owner()
     async def setstatus(self, ctx, status):
-        """Change the bot's presence"""
+        """Change the bot's presence""" #Description
 
         if status.startswith("on"):
             await self.bot.change_presence(status=discord.Status.online)
@@ -352,12 +356,14 @@ class Commands(commands.Cog):
     @commands.command(aliases=["meid", "safescore"])
     @commands.is_owner()
     async def connect(self, ctx):
-        """Connect using MeID and safe your progress (WIP)"""
+        """Connect using MeID and safe your progress (WIP)""" #Description
+        
         await ctx.send(f"Please connect with MeID: https://www.iloot.it/me-id/ (temp link, not finished)") #Connecting with MeID does not work yet.
         
     @commands.command(aliases=["git", "source"])
     async def github(self, ctx):
-        """Link to my Github page"""
+        """Link to my Github page""" #Description
+        
         await ctx.send(f"Here's my link to the Github page: \n"
                        f"https://github.com/MVDW-Java/Nword-Counter-Deluxe")
 

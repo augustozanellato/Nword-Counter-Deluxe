@@ -11,7 +11,7 @@ import discord
 
 
 class Error_Handlers(commands.Cog):
-    """Error Handlers for commands"""
+    #Error Handlers for commands
 
     def __init__(self, bot):
         self.bot = bot

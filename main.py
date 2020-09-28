@@ -6,6 +6,11 @@ To the extent possible under law, the author has dedicated all copyright and rel
 You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 """
 
+
+# ----
+# Imports and requirements.
+# ----
+
 from discord.ext import commands, tasks
 import discord
 import asyncpg
@@ -18,6 +23,11 @@ import re
 import os
 
 import config #! You'll need to define your own credentials in config.py
+
+
+# ----
+# Bot details.
+# ----
 
 bot = commands.Bot(
     command_prefix=commands.when_mentioned,
@@ -34,8 +44,16 @@ bot.load_extension("commands")
 bot.load_extension("error_handlers")
 
 
+# ----
+# MeID Syncing stuff.
+# ----
+
+meid_api_url = "https://www.iloot.it/me-id/api" #The API url will be changed later when I buy the domain.
+
+
+
 async def create_pool():
-    """Create table in postgres database if it doesn't already exist. Otherwise, get the n-word data"""
+    #Create table in postgres database if it doesn't already exist. Otherwise, get the n-word data
 
     bot.pool = await asyncpg.create_pool(config.POSTGRES)
     async with bot.pool.acquire() as conn:
@@ -88,8 +106,7 @@ async def on_ready():
     bot.app_info = await bot.application_info()
 
     await bot.change_presence(status=discord.Status.dnd, activity=discord.Activity(
-        #name=f"for N-Words on {len(bot.guilds)} servers", type=discord.ActivityType.watching))
-        name=f"for N-Words. Beta Sync with MeID.", type=discord.ActivityType.watching))
+        name=f"for N-Words on {len(bot.guilds)} servers", type=discord.ActivityType.watching))
 
 @bot.event
 async def on_message(message):
@@ -138,7 +155,7 @@ async def on_guild_remove(guild):
 
 @tasks.loop(minutes=5, loop=bot.loop)
 async def update_db():
-    """Update the SQL database every 5 minutes"""
+    # Update the SQL database every 5 minutes
 
     async with bot.pool.acquire() as conn:
         await conn.execute("""
@@ -161,7 +178,7 @@ async def update_db():
 @bot.command(hidden=True)
 @commands.is_owner()
 async def reload(ctx):
-    """Reload the bot's cogs"""
+    # Reload the bot's cogs
 
     bot.reload_extension("commands")
     bot.reload_extension("error_handlers")
