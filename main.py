@@ -35,6 +35,7 @@ bot = commands.Bot(
     case_insensitive=True,
     help_command=None,
     status=discord.Status.invisible,
+    intents=discord.Intents(members=True),
     fetch_offline_members=True
 )
 
