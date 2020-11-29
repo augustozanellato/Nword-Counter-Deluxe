@@ -113,6 +113,23 @@ async def on_ready():
 async def on_message(message):
     if not bot.ready_for_commands or message.author.bot:
         return
+        
+        
+    all_bot_ids = [759423458659532890, 772916331552440350] #List of all N-Word counter bots
+    all_bot_ids.remove(bot.user.id) #Remove myself from the list above
+    
+    
+    for this_id in all_bot_ids: #Looping through all N-Word counters.
+    
+        guild = bot.get_guild(message.guild.id)
+        for check_member in guild.members:
+            if check_member.id == this_id:
+                await message.channel.send(f"**Warning:** There are too many n-word counter bots in this Discord!\nPlease remove one that is hosted by MVDW.\n\nThis is to make sure everyone has an opportunity to invite this bot.")
+                return
+    
+    
+    
+
 
     if message.guild is not None:
         for m in re.finditer(r"\b(nigga)(s\b|\b)", message.content, re.IGNORECASE):
