@@ -225,7 +225,7 @@ class Commands(commands.Cog):
         for m, c in leaderboard.items():
             description += (f"**{counter}.** {m if param == 'global' else m.mention} - __{c:,} "
                             f"time{'' if c == 1 else 's'}__ ({self.bot.nwords[m.id]['hard_r']:,} "
-                            "with hard-R) ({self.bot.nwords[m.id]['eating_pizza']:,} while eating pizza)\n")
+                            f"with hard-R) ({self.bot.nwords[m.id]['eating_pizza']:,} while eating pizza)\n")
             counter += 1
 
         description = description.replace("**1.**", ":first_place:").replace("**2.**", ":second_place:").replace("**3.**", ":third_place:")
