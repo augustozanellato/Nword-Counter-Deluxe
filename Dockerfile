@@ -1,4 +1,4 @@
-FROM python:3.6
+FROM python:3.9
 ADD REQUIREMENTS.txt /
 RUN pip install -r REQUIREMENTS.txt
 ADD commands.py /
