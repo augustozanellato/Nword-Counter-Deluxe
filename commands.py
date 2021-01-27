@@ -44,8 +44,8 @@ class Commands(commands.Cog):
         embed = discord.Embed(
             title="N-Word Counter: Help Command",
             description="I keep track of every time a user says the N-word, hard R or not. I'm a "
-                        "pretty simple bot to use. My prefix is an @mention, meaning you'll have "
-                        f"to put {self.bot.user.mention} before every command."
+                        "pretty simple bot to use. My prefix is a comma, meaning you'll have "
+                        f"to put , before every command."
                         "\n\nHere's a short list of my commands:",
             color=find_color(ctx))
         embed.set_footer(
@@ -76,7 +76,7 @@ class Commands(commands.Cog):
             name="License",
             value="[CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/)")
         embed.add_field(
-            name="Source Code", value="https://github.com/MVDW-Java/Nword-Counter-Deluxe", inline=False)
+            name="Source Code", value="https://github.com/augustozanellato/Nword-Counter-Deluxe", inline=False)
 
         await ctx.send(embed=embed)
 
@@ -106,6 +106,8 @@ class Commands(commands.Cog):
                    f"time{'' if count['total'] == 1 else 's'}**")
             if count["hard_r"]:
                 msg += f", __{count['hard_r']:,} of which had a hard-R__"
+            if count["eating_pizza"]:
+                msg += f", __{count['hard_r']:,} of which while eating pizza__"
             if "last_time" in count:
                 since_last = count["total"] - count["last_time"]
                 if since_last:
@@ -182,7 +184,8 @@ class Commands(commands.Cog):
         embed.add_field(
             name="Total N-Words Counted",
             value=f"{self.bot.nwords[0]['total']:,} "
-                  f"({self.bot.nwords[0]['hard_r']:,} with hard-R)",
+                  f"({self.bot.nwords[0]['hard_r']:,} with hard-R)"
+                  f"({self.bot.nwords[0]['eating_pizza']:,} while eating pizza)",
             inline=False)
         embed.set_author(name="N-Word Counter Bot: Statistics", icon_url=self.bot.user.avatar_url)
         embed.set_footer(text="These statistics are accurate as of:")
@@ -222,7 +225,7 @@ class Commands(commands.Cog):
         for m, c in leaderboard.items():
             description += (f"**{counter}.** {m if param == 'global' else m.mention} - __{c:,} "
                             f"time{'' if c == 1 else 's'}__ ({self.bot.nwords[m.id]['hard_r']:,} "
-                            "with hard-R)\n")
+                            "with hard-R) ({self.bot.nwords[m.id]['eating_pizza']:,} while eating pizza)\n")
             counter += 1
 
         description = description.replace("**1.**", ":first_place:").replace("**2.**", ":second_place:").replace("**3.**", ":third_place:")
@@ -248,13 +251,13 @@ class Commands(commands.Cog):
 
     @commands.command(hidden=True)
     @commands.is_owner()
-    async def edit(self, ctx, user_id: int, total: int, hard_r: int, last_time: int=None):
+    async def edit(self, ctx, user_id: int, total: int, hard_r: int, eating_pizza: int, last_time: int=None):
         """Edit a user's entry in the dict or add a new one""" #Description
 
         if last_time:
-            self.bot.nwords[user_id] = {"id": user_id, "total": total, "hard_r": hard_r, "last_time": last_time}
+            self.bot.nwords[user_id] = {"id": user_id, "total": total, "hard_r": hard_r, "eating_pizza": eating_pizza, "last_time": last_time}
         else:
-            self.bot.nwords[user_id] = {"id": user_id, "total": total, "hard_r": hard_r}
+            self.bot.nwords[user_id] = {"id": user_id, "total": total, "hard_r": hard_r, "eating_pizza": eating_pizza}
         await ctx.send("Done")
 
     @commands.command(hidden=True)
@@ -342,9 +345,10 @@ class Commands(commands.Cog):
                     await conn.execute("""
                         UPDATE nwords
                         SET total = {},
-                            hard_r = {}
+                            hard_r = {},
+                            eating_pizza = {}
                         WHERE id = {}
-                    ;""".format(data["total"], data["hard_r"], data["id"]))
+                    ;""".format(data["total"], data["hard_r"], data["eating_pizza"], data["id"]))
 
         delta = time.perf_counter() - start
         mi = int(delta) // 60
@@ -353,19 +357,12 @@ class Commands(commands.Cog):
         await temp.delete()
         await ctx.send(f"Finished updating database ({mi}m {sec}s {ms}ms)")
         
-    @commands.command(aliases=["meid", "safescore"])
-    @commands.is_owner()
-    async def connect(self, ctx):
-        """Connect using MeID and safe your progress (WIP)""" #Description
-        
-        await ctx.send(f"Please connect with MeID: https://www.iloot.it/me-id/ (temp link, not finished)") #Connecting with MeID does not work yet.
-        
     @commands.command(aliases=["git", "source"])
     async def github(self, ctx):
         """Link to my Github page""" #Description
         
         await ctx.send(f"Here's my link to the Github page: \n"
-                       f"https://github.com/MVDW-Java/Nword-Counter-Deluxe")
+                       f"https://github.com/augustozanellato/Nword-Counter-Deluxe")
 
 def setup(bot):
     bot.add_cog(Commands(bot))

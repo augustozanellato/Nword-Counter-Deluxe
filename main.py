@@ -22,7 +22,7 @@ import time
 import re
 import os
 
-import config #! You'll need to define your own credentials in config.py
+import config
 
 
 # ----
@@ -46,14 +46,6 @@ bot.load_extension("commands")
 bot.load_extension("error_handlers")
 
 
-# ----
-# MeID Syncing stuff.
-# ----
-
-meid_api_url = "https://www.iloot.it/me-id/api" #The API url will be changed later when I buy the domain.
-
-
-
 async def create_pool():
     #Create table in postgres database if it doesn't already exist. Otherwise, get the n-word data
 
@@ -63,7 +55,8 @@ async def create_pool():
             CREATE TABLE IF NOT EXISTS nwords (
                 id BIGINT PRIMARY KEY,
                 total BIGINT NOT NULL DEFAULT 0,
-                hard_r BIGINT NOT NULL DEFAULT 0
+                hard_r BIGINT NOT NULL DEFAULT 0,
+                eating_pizza BIGINT NOT NULL DEFAULT 0
             )
         ;""")
 
@@ -110,6 +103,14 @@ async def on_ready():
     await bot.change_presence(status=discord.Status.online, activity=discord.Activity(
         name=f"for N-Words on {len(bot.guilds)} servers", type=discord.ActivityType.watching))
 
+def init_user(id):
+    if id not in bot.nwords:
+        bot.nwords.update(
+            {
+                id: {"total": 0, "hard_r": 0, "eating_pizza": 0, "id": id}
+            }
+        )
+
 @bot.event
 async def on_message(message):
     if not bot.ready_for_commands or message.author.bot:
@@ -117,7 +118,8 @@ async def on_message(message):
         
         
     all_bot_ids = [759423458659532890, 772916331552440350, 803736066640052224] #List of all N-Word counter bots
-    all_bot_ids.remove(bot.user.id) #Remove myself from the list above
+    if bot.user.id in all_bot_ids: 
+        all_bot_ids.remove(bot.user.id) #Remove myself from the list above
     
     
     for this_id in all_bot_ids: #Looping through all N-Word counters.
@@ -127,37 +129,35 @@ async def on_message(message):
             if check_member.id == this_id:
                 await message.channel.send(f"**Warning:** There are too many n-word counter bots in this Discord!\nPlease remove one that is hosted by MVDW.\n\nThis is to make sure everyone has an opportunity to invite this bot.")
                 return
-    
-    
-    
-
 
     if message.guild is not None:
         for m in re.finditer(r"\b(nigga)(s\b|\b)", message.content, re.IGNORECASE):
-            if message.author.id not in bot.nwords:
-                bot.nwords.update(
-                    {message.author.id: {"total": 0, "hard_r": 0, "id": message.author.id}})
+            init_user(message.author.id)
             bot.nwords[message.author.id]["total"] += 1
             bot.nwords[0]["total"] += 1
         for m in re.finditer(r"\b(nigger)(s\b|\b)", message.content, re.IGNORECASE):
-            if message.author.id not in bot.nwords:
-                bot.nwords.update(
-                    {message.author.id: {"total": 0, "hard_r": 0, "id": message.author.id}})
+            init_user(message.author.id)
             bot.nwords[message.author.id]["total"] += 1
             bot.nwords[0]["total"] += 1
             bot.nwords[message.author.id]["hard_r"] += 1
             bot.nwords[0]["hard_r"] += 1
+        for m in re.finditer(r"\b(negro)(s\b|\b)", message.content, re.IGNORECASE):
+            init_user(message.author.id)
+            bot.nwords[message.author.id]["total"] += 1
+            bot.nwords[0]["total"] += 1
+            bot.nwords[message.author.id]["eating_pizza"] += 1
+            bot.nwords[0]["eating_pizza"] += 1
 
     ctx = await bot.get_context(message)
     if ctx.valid:
         await bot.invoke(ctx)
     else:
         if bot.user in message.mentions and len(message.mentions) == 2:
-            await message.channel.send(f"You need to do `@{bot.user} count <user>` to get the "
-                                       f"N-word count of another user.\nDo `@{bot.user} help` "
+            await message.channel.send(f"You need to do `,count <user>` to get the "
+                                       f"N-word count of another user.\nDo `,help` "
                                        "for help on my other commands")
         elif bot.user in message.mentions:
-            await message.channel.send(f"Do `@{bot.user} help` for help on my commands")
+            await message.channel.send(f"Do `,help` for help on my commands")
 
 
 @bot.event
@@ -189,9 +189,10 @@ async def update_db():
             await conn.execute("""
                 UPDATE nwords
                 SET total = {},
-                    hard_r = {}
+                    hard_r = {},
+                    eating_pizza = {}
                 WHERE id = {}
-            ;""".format(data["total"], data["hard_r"], data["id"]))
+            ;""".format(data["total"], data["hard_r"], data["eating_pizza"], data["id"]))
 
 
 @bot.command(hidden=True)
