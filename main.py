@@ -36,7 +36,7 @@ bot = commands.Bot(
     case_insensitive=True,
     help_command=None,
     status=discord.Status.dnd,
-    intents=discord.Intents.all(),
+    intents=discord.Intents(messages=True, guilds=True, members=True),
     fetch_offline_members=True
 )
 
