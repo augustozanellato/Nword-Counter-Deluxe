@@ -29,13 +29,14 @@ import config #! You'll need to define your own credentials in config.py
 # Bot details.
 # ----
 
+
 bot = commands.Bot(
-    command_prefix=commands.when_mentioned,
+    command_prefix=',',
     description="N-Word Counter",
     case_insensitive=True,
     help_command=None,
-    status=discord.Status.invisible,
-    intents=discord.Intents(members=True),
+    status=discord.Status.dnd,
+    intents=discord.Intents.all(),
     fetch_offline_members=True
 )
 
@@ -106,7 +107,7 @@ async def on_ready():
     bot.started_at = datetime.datetime.utcnow()
     bot.app_info = await bot.application_info()
 
-    await bot.change_presence(status=discord.Status.dnd, activity=discord.Activity(
+    await bot.change_presence(status=discord.Status.online, activity=discord.Activity(
         name=f"for N-Words on {len(bot.guilds)} servers", type=discord.ActivityType.watching))
 
 @bot.event
@@ -115,7 +116,7 @@ async def on_message(message):
         return
         
         
-    all_bot_ids = [759423458659532890, 772916331552440350] #List of all N-Word counter bots
+    all_bot_ids = [759423458659532890, 772916331552440350, 803736066640052224] #List of all N-Word counter bots
     all_bot_ids.remove(bot.user.id) #Remove myself from the list above
     
     
@@ -161,13 +162,13 @@ async def on_message(message):
 
 @bot.event
 async def on_guild_join(guild):
-    await bot.change_presence(status=discord.Status.dnd, activity=discord.Activity(
+    await bot.change_presence(status=discord.Status.online, activity=discord.Activity(
         name=f"for N-Words on {len(bot.guilds)} servers", type=discord.ActivityType.watching))
 
 
 @bot.event
 async def on_guild_remove(guild):
-    await bot.change_presence(status=discord.Status.dnd, activity=discord.Activity(
+    await bot.change_presence(status=discord.Status.online, activity=discord.Activity(
         name=f"for N-Words on {len(bot.guilds)} servers", type=discord.ActivityType.watching))
 
 
@@ -219,6 +220,7 @@ async def restartudb(ctx):
 
 
 try:
+    time.sleep(5)
     bot.loop.run_until_complete(bot.start(config.TOKEN))
 except KeyboardInterrupt:
     print("\nClosing")
