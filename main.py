@@ -121,16 +121,15 @@ async def on_message(message):
     if bot.user.id in all_bot_ids: 
         all_bot_ids.remove(bot.user.id) #Remove myself from the list above
     
-    
-    for this_id in all_bot_ids: #Looping through all N-Word counters.
-    
-        guild = bot.get_guild(message.guild.id)
-        for check_member in guild.members:
-            if check_member.id == this_id:
-                await message.channel.send(f"**Warning:** There are too many n-word counter bots in this Discord!\nPlease remove one that is hosted by MVDW.\n\nThis is to make sure everyone has an opportunity to invite this bot.")
-                return
-
     if message.guild is not None:
+        for this_id in all_bot_ids: #Looping through all N-Word counters.
+    
+            guild = bot.get_guild(message.guild.id)
+            for check_member in guild.members:
+                if check_member.id == this_id:
+                    await message.channel.send(f"**Warning:** There are too many n-word counter bots in this Discord!\nPlease remove one that is hosted by MVDW.\n\nThis is to make sure everyone has an opportunity to invite this bot.")
+                    return
+
         for m in re.finditer(r"\b(nigga)(s\b|\b)", message.content, re.IGNORECASE):
             init_user(message.author.id)
             bot.nwords[message.author.id]["total"] += 1
